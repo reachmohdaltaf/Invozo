@@ -1,104 +1,45 @@
-import { useState } from 'react';
-import jsPDF from 'jspdf';
+'use client'
+import ThreeCards from '@/components/ThreeCards'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
-export default function Home() {
-  const [invoiceData, setInvoiceData] = useState({
-    clientName: '',
-    items: [{ description: '', quantity: 1, price: 0 }],
-  });
+import React from 'react'
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInvoiceData((prev) => ({ ...prev, [name]: value }));
-  };
+const page = () => {
+    return (
+      <div className='mt-10'>
+   <div className='flex flex-col items-center gap-10 justify-center'>
+    <Button className='text-xs'><span className='text-xs'>Trusted by 💙 10,000+ freelancers</span></Button>
+   <h1 className='text-center font-bold text-6xl'>Create Invoices in <span className='text-blue-500'>minutes</span> <br/>    not in hours.</h1>
+    <p className='w-2/4 text-center text-sm'>A Simple Invoice Generator for Freelancers and Businesses and enterprises.
+Effortlessly create, manage, and send professional invoices.
+</p>
+<div className='flex gap-4'>
+  <Link href='/generate'><Button variant="secondary" className='hover:-translate-y-1 duration-1000 hover:scale-105 transition'>Get Started</Button></Link>
+  <Link href='/generate'><Button variant="ghost" className="hover:bg-transparent transition  hover:-translate-y-1 duration-700 hover:text-blue-400 -1 hover:underline ">Try for Free</Button></Link>
+</div>
+   </div>
 
-  const handleItemChange = (index, field, value) => {
-    const updatedItems = [...invoiceData.items];
-    updatedItems[index][field] = field === 'quantity' || field === 'price' ? parseFloat(value) : value;
-    setInvoiceData((prev) => ({ ...prev, items: updatedItems }));
-  };
+<section className='flex  flex-col items-center justify-center gap-10'>
+<div className='flex h-screen justify-center opacity-90 '>
+  <ThreeCards/>
+  
+  
+</div>
 
-  const addItem = () => {
-    setInvoiceData((prev) => ({
-      ...prev,
-      items: [...prev.items, { description: '', quantity: 1, price: 0 }],
-    }));
-  };
+    <div className=' flex flex-col gap-4'>
+    <h3>Multi-Currency Support</h3>
+    <div className='flex gap-3'>
+    <Button variant="">$</Button>
+    <Button variant="">$</Button>
+    <Button variant="">$</Button>
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
-
-    // Invoice Header
-    doc.setFontSize(18);
-    doc.text('Invoice', 10, 10);
-    doc.setFontSize(12);
-    doc.text(`Client: ${invoiceData.clientName}`, 10, 20);
-
-    // Table Headers
-    doc.text('Description', 10, 40);
-    doc.text('Quantity', 100, 40);
-    doc.text('Price', 140, 40);
-
-    // Table Rows
-    let y = 50;
-    invoiceData.items.forEach((item) => {
-      doc.text(item.description, 10, y);
-      doc.text(item.quantity.toString(), 100, y);
-      doc.text(item.price.toFixed(2), 140, y);
-      y += 10;
-    });
-
-    // Total Amount
-    const total = invoiceData.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
-    doc.text(`Total: $${total.toFixed(2)}`, 10, y + 10);
-
-    // Save PDF
-    doc.save('invoice.pdf');
-  };
-
-  return (
-    <div style={{ padding: '20px' }}>
-      <h1>Invoice Generator</h1>
-
-      <div style={{ marginBottom: '20px' }}>
-        <label>Client Name:</label>
-        <input
-          type="text"
-          name="clientName"
-          value={invoiceData.clientName}
-          onChange={handleInputChange}
-          style={{ marginLeft: '10px' }}
-        />
-      </div>
-
-      <h3>Items</h3>
-      {invoiceData.items.map((item, index) => (
-        <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-          <input
-            type="text"
-            placeholder="Description"
-            value={item.description}
-            onChange={(e) => handleItemChange(index, 'description', e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Quantity"
-            value={item.quantity}
-            onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={item.price}
-            onChange={(e) => handleItemChange(index, 'price', e.target.value)}
-          />
-        </div>
-      ))}
-
-      <button onClick={addItem}>Add Item</button>
-      <button onClick={generatePDF} style={{ marginLeft: '10px' }}>
-        Download PDF
-      </button>
     </div>
-  );
+  </div>
+</section>
+    </div>
+  )
 }
+
+export default page
+
